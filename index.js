@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
 .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
+    app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     })
 })
