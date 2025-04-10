@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Post = require('./models/post.model.js');
-const productRoute = require('./routes/post.route.js');
+const postRoute = require('./routes/post.route.js');
 const app = express();
 require("dotenv").config()
 const host = process.env.HOST;
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // routes
-app.use("/posts", productRoute);
+app.use("/posts", postRoute);
 
 app.get("/", (req, res) => {
     res.send('Hello World!!!!!');
