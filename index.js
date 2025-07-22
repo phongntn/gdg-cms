@@ -1,9 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const Post = require('./models/post.model.js');
-const postRoute = require('./routes/post.route.js');
 const app = express();
-require("dotenv").config()
+const mongoose = require('mongoose');
+
+const postRoute = require('./routes/post.route.js');
+
+const eventRoute = require('./routes/event.route.js');
+
+require("dotenv").config();
 const host = process.env.HOST;
 const password = process.env.PASSWORD;
 const port = process.env.PORT;
@@ -14,6 +17,8 @@ app.use(express.urlencoded({extended: false}));
 
 // routes
 app.use("/posts", postRoute);
+
+app.use("/events", eventRoute);
 
 app.get("/", (req, res) => {
     res.send('Hello World!!!!!');
