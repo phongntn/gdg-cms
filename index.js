@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const postRoute = require('./routes/post.route.js');
 const eventRoute = require('./routes/event.route.js');
 const storageRoute = require('./routes/storage.route.js');
+const userRoute = require('./routes/user.route.js');
+const authRoute = require('./routes/auth.route.js');
 
 require("dotenv").config();
 const host = process.env.HOST;
@@ -19,12 +21,13 @@ app.use(express.urlencoded({extended: false}));
 app.use("/posts", postRoute);
 app.use("/events", eventRoute);
 app.use("/storage", storageRoute);
+app.use("/users", userRoute);
+app.use(authRoute);
 
 app.get("/", (req, res) => {
     res.send('Hello World!!!!!');
 });
 
-console.log("Checking branches");
 
 mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
 .then(() => {
