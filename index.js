@@ -1,4 +1,5 @@
 const express = require('express');
+const serverless = require('serverless-http');
 const app = express();
 const mongoose = require('mongoose');
 
@@ -46,5 +47,5 @@ mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/
     console.log("Connection failed!");
 });
 
-const serverless = require('serverless-http');
-module.exports = serverless(app);
+module.exports = app;
+module.exports.handler = serverless(app);
