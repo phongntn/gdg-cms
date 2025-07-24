@@ -8,6 +8,8 @@ const storageRoute = require('./routes/storage.route.js');
 const userRoute = require('./routes/user.route.js');
 const authRoute = require('./routes/auth.route.js');
 
+const apiRouter = express.Router();
+
 require("dotenv").config();
 const host = process.env.HOST;
 const password = process.env.PASSWORD;
@@ -18,14 +20,18 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // routes
-app.use("/posts", postRoute);
-app.use("/events", eventRoute);
-app.use("/storage", storageRoute);
-app.use("/users", userRoute);
-app.use(authRoute);
+apiRouter.use("/posts", postRoute);
+apiRouter.use("/events", eventRoute);
+apiRouter.use("/storage", storageRoute);
+apiRouter.use("/users", userRoute);
+apiRouter.use(authRoute);
 
-app.get("/", (req, res) => {
-    res.send('Hello World!!!!!');
+app.use('/', apiRouter);
+
+
+
+app.get('/', (req, res) => {
+    res.send('CMS backend');
 });
 
 
@@ -39,3 +45,6 @@ mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/
 .catch(() => {
     console.log("Connection failed!");
 });
+
+const serverless = require('serverless-http');
+module.exports = serverless(app);

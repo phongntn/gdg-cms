@@ -1,5 +1,5 @@
 {
-  "name": "backend-forum",
+  "name": "cms-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.1",
-    "nodemailer": "^7.0.5"
+    "nodemailer": "^7.0.5",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
