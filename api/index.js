@@ -3,11 +3,11 @@ const serverless = require('serverless-http');
 const app = express();
 const mongoose = require('mongoose');
 
-const postRoute = require('./routes/post.route.js');
-const eventRoute = require('./routes/event.route.js');
-const storageRoute = require('./routes/storage.route.js');
-const userRoute = require('./routes/user.route.js');
-const authRoute = require('./routes/auth.route.js');
+const postRoute = require('../routes/post.route.js');
+const eventRoute = require('../routes/event.route.js');
+const storageRoute = require('../routes/storage.route.js');
+const userRoute = require('../routes/user.route.js');
+const authRoute = require('../routes/auth.route.js');
 
 const apiRouter = express.Router();
 
