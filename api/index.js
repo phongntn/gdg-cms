@@ -3,11 +3,11 @@ const serverless = require('serverless-http');
 const app = express();
 const mongoose = require('mongoose');
 
-const postRoute = require('./routes/post.route.js');
-const eventRoute = require('./routes/event.route.js');
-const storageRoute = require('./routes/storage.route.js');
-const userRoute = require('./routes/user.route.js');
-const authRoute = require('./routes/auth.route.js');
+const postRoute = require('../routes/post.route.js');
+const eventRoute = require('../routes/event.route.js');
+const storageRoute = require('../routes/storage.route.js');
+const userRoute = require('../routes/user.route.js');
+const authRoute = require('../routes/auth.route.js');
 
 const apiRouter = express.Router();
 
@@ -47,5 +47,4 @@ mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/
     console.log("Connection failed!");
 });
 
-module.exports = app;
-module.exports.handler = serverless(app);
+module.exports = serverless(app);
