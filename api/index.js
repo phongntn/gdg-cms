@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 
-mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
+mongoose.connect(`mongodb+srv://phongntn1:phongntn16122006@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
 .then(() => {
     console.log("Connected to database!");
     // app.listen(port, () => {
