@@ -3,11 +3,11 @@ const serverless = require('serverless-http');
 const app = express();
 const mongoose = require('mongoose');
 
-const postRoute = require('../routes/post.route.js');
-const eventRoute = require('../routes/event.route.js');
-const storageRoute = require('../routes/storage.route.js');
-const userRoute = require('../routes/user.route.js');
-const authRoute = require('../routes/auth.route.js');
+const postRoute = require('./routes/post.route.js');
+const eventRoute = require('./routes/event.route.js');
+const storageRoute = require('./routes/storage.route.js');
+const userRoute = require('./routes/user.route.js');
+const authRoute = require('./routes/auth.route.js');
 
 const apiRouter = express.Router();
 
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 
-mongoose.connect(`mongodb+srv://phongntn1:phongntn16122006@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
+mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
 .then(() => {
     console.log("Connected to database!");
     // app.listen(port, () => {
