@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 
-mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB`)
+mongoose.connect(process.env.MONGO_URL)
 .then(() => {
     console.log("Connected to database!");
     // app.listen(port, () => {
@@ -47,4 +47,4 @@ mongoose.connect(`mongodb+srv://${host}:${password}@backenddb.zeezh.mongodb.net/
     console.log("Connection failed!");
 });
 
-module.exports = serverless(app);
+module.exports = app;
