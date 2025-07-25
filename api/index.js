@@ -8,6 +8,7 @@ const eventRoute = require('../routes/event.route.js');
 const storageRoute = require('../routes/storage.route.js');
 const userRoute = require('../routes/user.route.js');
 const authRoute = require('../routes/auth.route.js');
+const connectDB = require('../dbconnect.js')
 
 const apiRouter = express.Router();
 
@@ -35,16 +36,17 @@ app.get('/', (req, res) => {
     res.send('CMS backend');
 });
 
+connectDB();
 
-mongoose.connect(process.env.MONGO_URL)
-.then(() => {
-    console.log("Connected to database!");
-    // app.listen(port, () => {
-    //     console.log(`Server is running on port ${port}`);
-    // })
-})
-.catch(() => {
-    console.log("Connection failed!");
-});
+// mongoose.connect(process.env.MONGO_URL)
+// .then(() => {
+//     console.log("Connected to database!");
+//     app.listen(port, () => {
+//         console.log(`Server is running on port ${port}`);
+//     })
+// })
+// .catch(() => {
+//     console.log("Connection failed!");
+// });
 
 module.exports = app;
