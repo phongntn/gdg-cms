@@ -25,22 +25,49 @@ function generateTokens(user) {
   return { accessToken, refreshToken };
 }
 
+const register = async (req, res) => {
+    const { username, password, email } = req.body;
+    try {
+        const existing = await User.findOne({ username });
+        if (existing) return res.status(400).json({message: 'User already exists'});
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({ username, password: hashedPassword, email });
+
+        const tokens = generateTokens(user);
+
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+
+        res.status(200).json({
+            user,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+        });
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 const login = async (req, res) => {
     const { username, password } = req.body;
+    try {
+        const user = await User.findOne({ username });
+        if (!user) return res.status(401).json({ error: 'Username does not exist' });
+        else {
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return res.status(401).json({ error: 'Wrong password' });
+        }
 
-    const user = await User.findOne({ username });
-    if (!user) return res.status(401).json({ error: 'Username does not exist' });
-    else {
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ error: 'Wrong password' });
+        const tokens = generateTokens(user);
+
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+        res.json(tokens);
+
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
-
-    const tokens = generateTokens(user);
-
-    user.refreshToken = tokens.refreshToken;
-    await user.save();
-
-    res.json(tokens);
 }
 
 const logout = async (req, res) => {
@@ -57,6 +84,44 @@ const logout = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 }
+
+const refreshAccessToken = async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: 'No refresh token provided' });
+  }
+
+  try {
+    // Kiểm tra refresh token có tồn tại trong DB không
+    const user = await User.findOne({ refreshToken });
+
+    if (!user) {
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+
+    // Verify refresh token
+    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
+      if (err || decoded.userId !== user._id.toString()) {
+        return res.status(403).json({ message: 'Invalid or expired refresh token' });
+      }
+
+      // Tạo access token mới
+      const newAccessToken = jwt.sign(
+        {
+          userId: user._id,
+          username: user.username
+        },
+        ACCESS_TOKEN_SECRET,
+        { expiresIn: '15m' }
+      );
+
+      return res.status(200).json({ accessToken: newAccessToken });
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
@@ -91,6 +156,8 @@ const forgotPassword = async (req, res) => {
 }
 
 module.exports = {
+    register,
     login,
-    logout
+    logout,
+    refreshAccessToken
 }

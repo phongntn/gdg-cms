@@ -25,7 +25,8 @@ const UserSchema = mongoose.Schema(
             unique: true
         },
         role: {
-            type: String
+            type: String,
+            default: "Member"
         },
         specialty: {
             type: String
