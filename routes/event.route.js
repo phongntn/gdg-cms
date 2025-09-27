@@ -9,7 +9,13 @@ router.get('/:id', authenticateToken, getEvent);
 router.post('/', authenticateToken, createEvent);
 
 router.put('/:id', authenticateToken, updateEvent);
+router.put('/', authenticateToken, (res) => {
+    res.status(400).json({ message: "No parameter provided" });
+});
 
 router.delete('/:id', authenticateToken, deleteEvent);
+router.delete('/', authenticateToken, (res) => {
+    res.status(400).json({ message: "No parameter provided" });
+});
 
 module.exports = router;
