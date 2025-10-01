@@ -1,6 +1,7 @@
 const express = require('express');
 const serverless = require('serverless-http');
 const app = express();
+const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
 const postRoute = require('../routes/post.route.js');
@@ -18,6 +19,14 @@ const password = process.env.PASSWORD;
 const port = process.env.PORT;
 
 //middleware
+app.use((req, res, next) => {
+  const contentType = req.headers["content-type"];
+
+  if (!contentType && req.method !== "GET") {
+    req.headers["content-type"] = "application/json";
+  }
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
