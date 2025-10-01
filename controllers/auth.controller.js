@@ -26,10 +26,6 @@ function generateTokens(user) {
 }
 
 const register = async (req, res) => {
-    console.log("BODY:", req.body);  // log thử trên Vercel
-      if (!req.body.password) {
-        return res.status(400).json({ message: "Password is missing" });
-    }
     const { username, password, email } = req.body;
     try {
         const existing = await User.findOne({ username });
