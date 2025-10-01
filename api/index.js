@@ -2,7 +2,6 @@ const express = require('express');
 const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require("body-parser");
-const mongoose = require('mongoose');
 
 const postRoute = require('../routes/post.route.js');
 const eventRoute = require('../routes/event.route.js');
@@ -27,6 +26,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use(bodyParser.json({ type: "*/*" }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
