@@ -26,12 +26,17 @@ function generateTokens(user) {
 }
 
 const register = async (req, res) => {
+    console.log("BODY:", req.body);  // log thử trên Vercel
+      if (!req.body.password) {
+        return res.status(400).json({ message: "Password is missing" });
+    }
     const { username, password, email } = req.body;
     try {
         const existing = await User.findOne({ username });
         if (existing) return res.status(400).json({message: 'User already exists'});
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = await User.create({ username, password: hashedPassword, email });
 
         const tokens = generateTokens(user);
