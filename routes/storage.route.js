@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require('../middlewares/auth.middleware.js');
+const {authenticateToken, authorizeRoles} = require('../middlewares/auth.middleware.js');
 const {getFiles, getFile, createFile, updateFile, deleteFile} = require("../controllers/storage.controller.js");
 
 router.get('/', authenticateToken, getFiles);

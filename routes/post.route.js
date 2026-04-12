@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require('../middlewares/auth.middleware.js');
+const {authenticateToken, authorizeRoles} = require('../middlewares/auth.middleware.js');
 const {getPosts, getPost, createPost, updatePost, deletePost} = require('../controllers/post.controller.js');
 
 router.get('/', authenticateToken, getPosts);

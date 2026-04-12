@@ -12,9 +12,21 @@ const authenticateToken = (req, res, next) => {
     jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).json({ message: 'Invalid or expired token' });
 
-        req.user = user; // userId, username đã được ký khi tạo token
+        req.user = user;
         next();
     });
 };
 
-module.exports = authenticateToken;
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: insufficient rights' });
+    }
+    next();
+  };
+};
+
+module.exports = {
+    authenticateToken,
+    authorizeRoles
+};

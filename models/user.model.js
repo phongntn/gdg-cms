@@ -31,9 +31,13 @@ const UserSchema = mongoose.Schema(
         },
         role: {
             type: String,
-            default: "Member"
+            enum: ['Admin', 'Leader', 'Member'],
+            default: 'Member'
         },
         specialty: {
+            type: String
+        },
+        major: {
             type: String
         },
         refreshToken: String,
@@ -43,19 +47,19 @@ const UserSchema = mongoose.Schema(
     {
         toJSON: {
             transform: function (doc, ret) {
-            ret.id = ret.userId;
-            delete ret._id;
-            delete ret.__v;
-            delete ret.userId;
-            return {
-                id: ret.id,
-                username: ret.username,
-                firstName: ret.firstName,
-                lastName: ret.lastName,
-                email: ret.email,
-                role: ret.role,
-                specialty: ret.specialty
-            }
+                ret.id = ret.userId;
+                delete ret._id;
+                delete ret.__v;
+                delete ret.userId;
+                return {
+                    id: ret.id,
+                    username: ret.username,
+                    firstName: ret.firstName,
+                    lastName: ret.lastName,
+                    email: ret.email,
+                    role: ret.role,
+                    specialty: ret.specialty
+                }
             }
         }
     }

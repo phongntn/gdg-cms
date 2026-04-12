@@ -20,19 +20,19 @@ const PostSchema = mongoose.Schema(
 
         author: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         },
 
         votes: {
             type: Number,
-            required: true,
             default: 0
         },
 
-        image: {
-            type: String,
-            required: false
-        },
+        anonymous: {
+            type :Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,

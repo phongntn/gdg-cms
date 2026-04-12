@@ -1,4 +1,5 @@
 const Event = require('../models/event.model.js');
+const User = require('../models/user.model');
 
 const getEvents = async (req, res) => {
     try {
@@ -24,8 +25,26 @@ const getEvent = async (req, res) => {
 }
 
 const createEvent = async (req, res) => {
+    
     try {
-        const event = await Event.create(req.body);
+        const username = req.user?.username;
+
+    if (!username) {
+      return res.status(401).json({ message: "Unauthorized: no user found" });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const eventData = {
+      ...req.body,
+      author: username
+    };
+
+    const event = await Event.create(eventData);
+        
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({message: error.message});

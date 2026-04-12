@@ -11,7 +11,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 function generateTokens(user) {
   const accessToken = jwt.sign(
-    { userId: user._id, username: user.username },
+    { userId: user._id, username: user.username, role: user.role },
     ACCESS_TOKEN_SECRET,
     { expiresIn: '15m' }
   );
@@ -31,8 +31,14 @@ const register = async (req, res) => {
         const existing = await User.findOne({ username });
         if (existing) return res.status(400).json({message: 'User already exists'});
 
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        if (username.includes(' ')) {
+          res.status(400).json({message: 'Username not allowed'})
+        }
+        if (password.includes(' ')) {
+          res.status(400).json({message: 'Username not allowed'})
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ username, password: hashedPassword, email });
 
         const tokens = generateTokens(user);
@@ -111,7 +117,8 @@ const refreshAccessToken = async (req, res) => {
       const newAccessToken = jwt.sign(
         {
           userId: user._id,
-          username: user.username
+          username: user.username,
+          role: user.role
         },
         ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
