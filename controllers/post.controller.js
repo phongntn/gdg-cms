@@ -1,4 +1,5 @@
 const Post = require('../models/post.model.js');
+const User = require('../models/user.model');
 
 const getPosts = async (req, res) => {
     try {
@@ -20,12 +21,32 @@ const getPost = async (req, res) => {
 }
 
 const createPost = async (req, res) => {
+
     try {
-        const post = await Post.create(req.body);
-        res.status(200).json(post);
+        const username = req.user?.username;
+
+    if (!username) {
+      return res.status(401).json({ message: "Unauthorized: no user found" });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const postData = {
+      ...req.body,
+      author: username
+    };
+
+    const event = await Post.create(postData);
+        
+        res.status(200).json(event);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
+
+    
 }
 
 const updatePost = async (req, res) => {

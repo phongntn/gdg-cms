@@ -24,7 +24,7 @@ const PostSchema = mongoose.Schema(
             unique: true
         },
 
-        votes: {
+        vote: {
             type: Number,
             default: 0
         },

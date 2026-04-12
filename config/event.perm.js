@@ -3,14 +3,12 @@ const eventPermissions = {
         Member: ["notifyTo", "confirmed"]
     },
     edit: {
-        Admin: ["author"],
-        Leader: ["author"],
-        Member: ["author"]
+        Admin: ["author", "vote"],
+        Leader: ["author", "vote"]
     },
     create: {
-        Admin: ["author"],
-        Leader: ["author"],
-        Member: ["author"]
+        Admin: ["author", "vote"],
+        Leader: ["author", "vote"]
     }
 };
 
