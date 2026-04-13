@@ -20,8 +20,7 @@ const PostSchema = mongoose.Schema(
 
         author: {
             type: String,
-            required: true,
-            unique: true
+            required: true
         },
 
         vote: {

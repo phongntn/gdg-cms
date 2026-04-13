@@ -9,25 +9,27 @@ const UserSchema = mongoose.Schema(
         },
         username: {
             type: String,
-            require: true,
-            unique: true
+            required: true,
+            unique: true,
+            trim: true
         },
         password: {
             type: String,
-            require: true
+            required: true
         },
         firstName: {
-            type: String,
-            require: true
+            type: String
         },
         lastName: {
-            type: String,
-            require: true
+            type: String
         },
         email: {
             type: String,
-            require: true,
-            unique: true
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email format']
         },
         role: {
             type: String,

@@ -19,8 +19,7 @@ const EventSchema = mongoose.Schema(
         },
 
         author: {
-            type: String,
-            unique: true
+            type: String
         },
 
         notifyTo: {

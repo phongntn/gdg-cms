@@ -8,7 +8,7 @@ const filterFields = (data, deniedFields) => {
   }
 
   if (typeof data.toObject === "function") {
-    data = data.toObject();
+    data = data.toJSON();
   }
 
   const filtered = { ...data };
