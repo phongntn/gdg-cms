@@ -1,4 +1,5 @@
 const Event = require('../models/event.model.js');
+const User = require('../models/user.model');
 
 const getEvents = async (req, res) => {
     try {
@@ -11,21 +12,44 @@ const getEvents = async (req, res) => {
 
 const getEvent = async (req, res) => {
     try {
-        const { id } = req.params;
-        const event = await Event.findById(id);
-        if (!event) {
-            return res.status(404).json({message: "Event not found"});
+        const eventId = Number(req.params.id);
+
+        if (Number.isNaN(eventId)) {
+            return res.status(400).json({ message: 'Invalid event id' });
         }
-        res.status(200).json(event);
-    } catch (error) {
-        res.status(500).json({message: error.message});
-        
+
+        const event = await Event.findOne({ eventId });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        return res.status(200).json(event);
+        } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const createEvent = async (req, res) => {
+    
     try {
-        const event = await Event.create(req.body);
+        const username = req.user?.username;
+
+    if (!username) {
+      return res.status(401).json({ message: "Unauthorized: no user found" });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const eventData = {
+      ...req.body,
+      author: username
+    };
+
+    const event = await Event.create(eventData);
+        
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({message: error.message});
@@ -34,38 +58,46 @@ const createEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     try {
-        const { id } = req.params;
+        const eventId = Number(req.params.id);
 
-        const event = await Event.findByIdAndUpdate(id, req.body);
-        
-        if (!event) {
-            return res.status(404).json({message: "Event not found"});
+        if (Number.isNaN(eventId)) {
+            return res.status(400).json({ message: 'Invalid event id' });
         }
 
-        const updatedEvent = await Event.findById(id);
-        res.status(200).json({updatedEvent});
+        const updatedEvent = await Event.findOneAndUpdate(
+            { eventId },
+            req.body,
+            { new: true, runValidators: true }
+        );
 
+        if (!updatedEvent) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        return res.status(200).json(updatedEvent);
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const deleteEvent = async (req, res) => {
     try {
-        const { id } = req.params;
+        const eventId = Number(req.params.id);
 
-        const event = await Event.findByIdAndDelete(id);
-
-        if (!event) {
-            return res.status(404).json({message: "Event not found"});
+        if (Number.isNaN(eventId)) {
+            return res.status(400).json({ message: 'Invalid event id' });
         }
 
-        res.status(200).json({message: "Event deleted successfully"});
+        const event = await Event.findOneAndDelete({ eventId });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
 
+        return res.status(200).json({ message: 'Event deleted successfully' });
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 module.exports = {
     getEvents,

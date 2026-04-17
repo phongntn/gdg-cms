@@ -19,23 +19,19 @@ const EventSchema = mongoose.Schema(
         },
 
         author: {
-            type: String,
-            required: true
+            type: String
         },
 
         notifyTo: {
-            type: [String],
-            required: true
+            type: [String]
         },
 
         confirmed: {
-            type: [String],
-            required: true
+            type: [String]
         },
         
         vote: {
             type: Number,
-            required: true,
             default: 0
         }
     },
