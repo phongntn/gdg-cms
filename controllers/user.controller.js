@@ -1,63 +1,80 @@
 require('dotenv').config();
-
 const User = require('../models/user.model');
 
 const getUsers = async (req, res) => {
     try {
         const users = await User.find({});
-        res.status(200).json(users);
+        return res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const getUser = async (req, res) => {
-    const { id } = req.params;
     try {
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({message: "User not found"});
+        const userId = Number(req.params.id);
+
+        if (Number.isNaN(userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
         }
-        res.status(200).json(user);
+
+        const user = await User.findOne({ userId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const updateUser = async (req, res) => {
-    const { id } = req.params;
     try {
-        const user = await User.findByIdAndUpdate(id, req.body);
-        if (!user) {
-            return res.status(404).json({message: "User not found"});
+        const userId = Number(req.params.id);
+
+        if (Number.isNaN(userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
         }
-        const updatedUser = await User.findById(id);
-        res.status(200).json(updatedUser);
+
+        const updatedUser = await User.findOneAndUpdate(
+            { userId },
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const deleteUser = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = Number(req.params.id);
 
-        const user = await User.findByIdAndDelete(id);
-
-        if (!user) {
-            return res.status(404).json({message: "User not found"});
+        if (Number.isNaN(userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
         }
 
-        res.status(200).json({message: "User deleted successfully"});
+        const user = await User.findOneAndDelete({ userId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
+        return res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 module.exports = {
     getUsers,
     getUser,
     updateUser,
     deleteUser
-}
+};
